@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task1.Interfaces
+namespace Task1.Exceptions
 {
-    interface ILogger
+    public class ServiceRepositoryException
     {
     }
 }

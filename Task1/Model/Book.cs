@@ -8,10 +8,10 @@ namespace Task1
 {
     public class Book : IEquatable<Book>
     {
-        public string Name { get; set; }
-        public string Author { get; set; }
-        public DateTime PublishDate { get; set; }
-        public int PageNumber { get; set; }
+        public string Name { get; set; } = "";
+        public string Author { get; set; } = "";
+        public DateTime PublishDate { get; set; } = DateTime.Now;
+        public int PageNumber { get; set; } = 0;
 
         public override string ToString()
         {
@@ -36,7 +36,9 @@ namespace Task1
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
-            return Name?.Equals(other.Name) == true && Author?.Equals(other.Author) == true;
+            return
+                Name?.Equals(other.Name) == true && Author?.Equals(other.Author) == true &&
+                PublishDate == other.PublishDate && PageNumber == other.PageNumber;
         }
 
         public override int GetHashCode()
