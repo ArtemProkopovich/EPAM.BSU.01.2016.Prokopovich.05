@@ -38,7 +38,7 @@ namespace Task1
                 return true;
             return
                 Name?.Equals(other.Name) == true && Author?.Equals(other.Author) == true &&
-                PublishDate == other.PublishDate && PageNumber == other.PageNumber;
+                PageNumber == other.PageNumber;
         }
 
         public override int GetHashCode()

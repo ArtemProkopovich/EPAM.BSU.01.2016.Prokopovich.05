@@ -11,7 +11,7 @@ namespace Task1
 
     public abstract class RepositoryFactory
     {
-        private static readonly string REP_TYPE = ConfigurationManager.GetSection("rep_type").ToString();
+        private static readonly string REP_TYPE = "file"; //ConfigurationManager.GetSection("rep_type").ToString();
 
         public static RepositoryFactory FactoryInstance
         {

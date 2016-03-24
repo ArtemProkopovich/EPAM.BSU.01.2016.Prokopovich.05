@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Task1.Interfaces;
 using Task1.Exceptions;
+using Task1.File;
 
 namespace Task1
 {

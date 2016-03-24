@@ -11,12 +11,18 @@ namespace Task1.File
 {
     public class FileRepository : IRepository<Book>
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private Logger logger = LogManager.GetCurrentClassLogger();
         private FileRepository() { }
         private static readonly IFile<Book> FileAccessInstance = FileAccessFactory.FileAccessInstance;
 
         public static FileRepository Instance { get; } = new FileRepository();
     
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="items"></param>
+        /// <exception cref="AlreadyExistsException"></exception>
+        /// <exception cref="RepositoryException"></exception>
         public void Add(IEnumerable<Book> items)
         {
             try
