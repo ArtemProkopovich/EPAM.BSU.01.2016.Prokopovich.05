@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Task1
 {
+    [Serializable]
     public class Book : IEquatable<Book>
     {
         public string Name { get; set; } = "";

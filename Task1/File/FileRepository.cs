@@ -12,182 +12,118 @@ namespace Task1.File
     public class FileRepository : IRepository<Book>
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
-        private FileRepository() { }
-        private static readonly IFile<Book> FileAccessInstance = FileAccessFactory.FileAccessInstance;
 
-        public static FileRepository Instance { get; } = new FileRepository();
-    
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="items"></param>
-        /// <exception cref="AlreadyExistsException"></exception>
-        /// <exception cref="RepositoryException"></exception>
-        public void Add(IEnumerable<Book> items)
+        private FileRepository()
+        {
+        }
+
+        private static IFile<Book> FileAccessInstance;
+        private List<Book> innerList = new List<Book>();
+
+        public static FileRepository GetInstance(string type)
+        {
+            FileAccessInstance = FileAccessFactory.GetFileAccessInstance(type);
+            return new FileRepository();
+        }
+
+        public void Load()
         {
             try
             {
-                List<Book> fileItems = TakeAll().ToList();
-                foreach (Book book in items)
-                {
-                    if (-1 != fileItems.FindIndex(e => e.Equals(book)))
-                        throw new AlreadyExistsException("", nameof(book));
-                }
-                FileAccessInstance.AppendAll(items);
-            }
-            catch (AlreadyExistsException ex)
-            {
-                logger.Error(ex);
-                throw ex;
+                innerList = FileAccessInstance.LoadAll().ToList();
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
                 throw new RepositoryException("", ex);
+            }
+        }
+
+        public void Save()
+        {
+            try
+            {
+                FileAccessInstance.SaveAll(innerList);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
             }
         }
 
         public void Add(Book item)
         {
-            try
+            logger.Debug(item);
+            if (item == null)
             {
-                if (-1 != TakeAll().ToList().FindIndex(e => e.Equals(item)))
-                    throw new AlreadyExistsException("", nameof(item));
-                FileAccessInstance.Append(item);
+                throw new ArgumentNullException("", nameof(item));
             }
-            catch (AlreadyExistsException ex)
+            if (innerList.FindIndex(e => e.Equals(item)) < 0)
+                innerList.Add(item);
+            else
+                throw new AlreadyExistsException("", nameof(item));
+        }
+
+        public void Add(IEnumerable<Book> items)
+        {
+            logger.Debug(items);
+            if (items == null)
+                throw new ArgumentNullException("", nameof(items));
+            foreach (var item in items)
+                Add(item);
+        }
+
+        public void Delete(Book item)
+        {
+            logger.Debug(item);
+            if (item == null)
+                throw new ArgumentNullException("", nameof(item));
+            if (!innerList.Remove(item))
             {
-                logger.Error(ex);
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                throw new RepositoryException("", ex);
+                throw new NotFoundException("", nameof(item));
             }
         }
 
         public void Delete(IEnumerable<Book> items)
         {
-            try
-            {
-                List<Book> fileItems = TakeAll().ToList();
-                foreach (Book book in items)
-                {
-                    if (-1 == fileItems.FindIndex(e => e.Equals(book)))
-                        throw new NotFoundException("", nameof(book));
-                }
-                foreach (Book book in items)
-                {
-                    fileItems.Remove(book);
-                }
-                FileAccessInstance.Write(fileItems);
-            }
-            catch (NotFoundException ex)
-            {
-                logger.Error(ex);
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                throw new RepositoryException("", ex);
-            }
-        }
-
-        public void Delete(Book item)
-        {
-            try
-            {
-                List<Book> fileItems = TakeAll().ToList();
-                if (-1 == fileItems.FindIndex(e => e.Equals(item)))
-                    throw new NotFoundException("", nameof(item));
-                fileItems.Remove(item);
-                FileAccessInstance.Write(fileItems);
-            }
-            catch (NotFoundException ex)
-            {
-                logger.Error(ex);
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                throw new RepositoryException("", ex);
-            }
-        }
-
-        public IEnumerable<Book> FindAll(Predicate<Book> match)
-        {
-            try
-            {
-                List<Book> fileItems = TakeAll().ToList();
-                List<Book> result = fileItems.Where(item => match(item)).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                throw new RepositoryException("", ex);
-            }
-        }
-
-        public Book FindFirst(Predicate<Book> match)
-        {
-            try
-            {
-                List<Book> fileItems = TakeAll().ToList();
-                Book result = fileItems.Find(match);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                throw new RepositoryException("", ex);
-            }
-        }
-
-        public IEnumerable<Book> Sort(IComparer<Book> comparer)
-        {
-            try
-            {
-                List<Book> fileItems = TakeAll().ToList();
-                fileItems.Sort(comparer);
-                return fileItems;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                throw new RepositoryException("", ex);
-            }
-        }
-
-        public IEnumerable<Book> Sort(Comparison<Book> comparer)
-        {
-            try
-            {
-                List<Book> fileItems = TakeAll().ToList();
-                fileItems.Sort(comparer);
-                return fileItems;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                throw new RepositoryException("", ex);
-            }
+            if (items == null)
+                throw new ArgumentNullException("", nameof(items));
+            foreach (var item in items)
+                Delete(item);
         }
 
         public IEnumerable<Book> TakeAll()
         {
-            try
-            {
-                return FileAccessInstance.ReadAll();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                throw new RepositoryException("", ex);
-            }
+            return innerList;
+        }
+
+        public Book FindFirst(Predicate<Book> match)
+        {
+            if (match == null)
+                throw new ArgumentNullException("", nameof(match));
+            return innerList.Find(match);
+        }
+
+        public IEnumerable<Book> FindAll(Predicate<Book> match)
+        {
+            if (match == null)
+                throw new ArgumentNullException("", nameof(match));
+            return innerList.FindAll(match);
+        }
+
+        public IEnumerable<Book> Sort(Comparison<Book> comparison)
+        {
+            if (comparison == null)
+                throw new ArgumentNullException("", nameof(comparison));
+            Book[] array = new Book[innerList.Count];
+            innerList.CopyTo(array);
+            Array.Sort(array, comparison);
+            return array;
+        }
+
+        public IEnumerable<Book> Sort(IComparer<Book> comparer)
+        {
+            return Sort(comparer.Compare);
         }
     }
 }

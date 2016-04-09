@@ -21,12 +21,14 @@ namespace Task1_ConsoleApplication
             SortByName,
             AddBook,
             DeleteBook,
+            ChangeRepository,
+            Save,
             Exit
         }
 
         public static void ShowMenu()
         {
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 11; i++)
             {
                 Console.WriteLine($"{i}) {((Command)i)}");
             }
@@ -53,6 +55,28 @@ namespace Task1_ConsoleApplication
             ShowBooks(controller.FindAll(Console.ReadLine(), Controller.OpType.Name));
         }
 
+        public static void ChangeRepository()
+        {
+            Console.WriteLine("Выберите вид репозитория:");
+            Console.WriteLine("1-бинарный файл.");
+            Console.WriteLine("2-бинарный файл с сериализацией.");
+            Console.WriteLine("3-XML файл.");
+            string c = Console.ReadLine();
+            switch (c)
+            {
+                case "2":
+                    controller.ChangeRepostiory(Controller.RepType.BinarySerializable);
+                    break;
+                case "3":
+                    controller.ChangeRepostiory(Controller.RepType.XML);
+                    break;
+                default:
+                    controller.ChangeRepostiory(Controller.RepType.Binary);
+                    break;
+
+            }
+        }
+
         public static void FindByAuthor()
         {
             Console.WriteLine("Введите автора книги");
@@ -75,6 +99,11 @@ namespace Task1_ConsoleApplication
                 Console.WriteLine(book);
         }
 
+        public static void Save()
+        {
+            controller.Save();
+        }
+
         public static Book BookEnter()
         {
             Book book = new Book();
@@ -92,7 +121,8 @@ namespace Task1_ConsoleApplication
         static void Main(string[] args)
         {
             int command = 0;
-            while (command >= 0 && command < 8)
+            ChangeRepository();
+            while (command >= 0 && command < 10)
             {
                 switch ((Command) command)
                 {
@@ -119,6 +149,12 @@ namespace Task1_ConsoleApplication
                         break;
                     case Command.SortByAuthor:
                         SortByAuthor();
+                        break;
+                    case Command.ChangeRepository:
+                        ChangeRepository();
+                        break;
+                    case Command.Save:
+                        Save();
                         break;
                     case Command.Exit:
                         return;

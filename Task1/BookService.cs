@@ -9,9 +9,25 @@ using Task1.File;
 
 namespace Task1
 {
-    public class BookService:IService<Book>
+    public class BookService : IService<Book>
     {
-        private static readonly IRepository<Book> repository = RepositoryFactory.FactoryInstance.FileRepository;
+        private readonly IRepository<Book> repository;
+
+        public BookService(string rep_type)
+        {
+            repository = RepositoryFactory.FactoryInstance.GetFileRepository(rep_type);
+            Load();
+        }
+
+        public void Load()
+        {
+            repository.Load();
+        }
+
+        public void Save()
+        {
+            repository.Save();
+        }
 
         public void Add(Book book)
         {
@@ -19,6 +35,7 @@ namespace Task1
                 throw new ArgumentNullException(nameof(book));
             repository.Add(book);
         }
+
         public void Add(IEnumerable<Book> books)
         {
             if (books == null)
@@ -32,6 +49,7 @@ namespace Task1
                 throw new ArgumentNullException(nameof(book));
             repository.Delete(book);
         }
+
         public void Delete(IEnumerable<Book> books)
         {
             if (books == null)

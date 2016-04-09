@@ -12,6 +12,6 @@ namespace Task1.File
 
         public static FileRepositoryFactory Instance { get; } = new FileRepositoryFactory();
 
-        public override FileRepository FileRepository => FileRepository.Instance;
+        public override FileRepository GetFileRepository(string type) => FileRepository.GetInstance(type);
     }
 }

@@ -14,5 +14,7 @@ namespace Task1.Interfaces
         IEnumerable<T> FindAll(Predicate<T> match);
         IEnumerable<T> Sort(Comparison<T> comparer);
         IEnumerable<T> Sort(IComparer<T> comparer);
+        void Load();
+        void Save();
     }
 }

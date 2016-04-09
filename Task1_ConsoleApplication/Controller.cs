@@ -16,10 +16,40 @@ namespace Task1_ConsoleApplication
             PageNumber
         }
 
+        public enum RepType
+        {
+            Binary,
+            BinarySerializable,
+            XML
+        }
+
         private Controller() { }
         public static Controller Instance { get; } = new Controller();
+        private static string rep_type = "binaryFile";
+        public static BookService service = new BookService(rep_type);
+        
 
-        public static BookService service = new BookService();
+        public void ChangeRepostiory(RepType type)
+        {
+            switch (type)
+            {
+                case RepType.Binary:
+                    rep_type = "binaryFile";
+                    break;
+                case RepType.BinarySerializable:
+                    rep_type = "binarySerializer";
+                    break;
+                case RepType.XML:
+                    rep_type = "XMLSerializer";
+                    break;
+            }
+            service = new BookService(rep_type);
+        }
+
+        public void Save()
+        {
+            service.Save();
+        }
 
         public void Add(Book item)
         {

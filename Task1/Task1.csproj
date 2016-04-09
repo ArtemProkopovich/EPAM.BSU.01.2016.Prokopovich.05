@@ -38,12 +38,14 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\AlreadyExistsException.cs" />
@@ -51,8 +53,10 @@
     <Compile Include="Exceptions\ServiceRepositoryException.cs" />
     <Compile Include="Exceptions\StorageException.cs" />
     <Compile Include="File\BinaryFile.cs" />
+    <Compile Include="File\BinarySerializableFile.cs" />
     <Compile Include="File\FileAccessFactory.cs" />
-    <Compile Include="File\IFile.cs" />
+    <Compile Include="File\XMLSerializableFile.cs" />
+    <Compile Include="Interfaces\IFile.cs" />
     <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Loggers\ILogger.cs" />
     <Compile Include="Model\Book.cs" />

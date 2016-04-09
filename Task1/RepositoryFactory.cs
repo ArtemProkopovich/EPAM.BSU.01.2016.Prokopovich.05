@@ -27,7 +27,7 @@ namespace Task1
         }
 
 
-        public abstract FileRepository FileRepository { get; }
+        public abstract FileRepository GetFileRepository(string type);
     }
 
 }
